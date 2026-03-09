@@ -1,37 +1,47 @@
 # Juego del Ahorcado
 
-Un juego del ahorcado interactivo implementado en Python con interfaz gráfica usando Tkinter.
+Un juego del ahorcado interactivo implementado en Python con interfaz web usando Flask.
 
 ## Características
 
-- **Interfaz gráfica**: Juego con ventana GUI fácil de usar.
+- **Interfaz web**: Juego accesible desde cualquier navegador.
 - **Categorías**: Palabras organizadas en categorías (animales, frutas, países, colores).
 - **Arte ASCII**: Representación visual del ahorcado que se actualiza con cada error.
 - **Validación**: Verificación de entradas y letras ya usadas.
-- **Nuevo juego**: Botón para iniciar una nueva partida sin cerrar la aplicación.
-- **Mensajes**: Retroalimentación inmediata para aciertos y errores.
+- **Nuevo juego**: Botón para iniciar una nueva partida.
+- **Responsive**: Diseño adaptable a diferentes tamaños de pantalla.
 
 ## Cómo jugar
 
-Ejecuta el script `ahorcado.py` con Python:
+### Localmente
+Ejecuta el script `app.py` con Python:
 
 ```
-python ahorcado.py
+python app.py
 ```
 
-- Se mostrará una categoría y la palabra oculta con guiones bajos.
-- Ingresa letras en el campo de texto y presiona "Adivinar letra" o Enter.
-- Tienes 6 intentos para adivinar la palabra completa.
-- El ahorcado se dibuja progresivamente con cada error.
-- Gana adivinando todas las letras antes de agotar los intentos.
+Abre tu navegador en `http://127.0.0.1:5000/`
+
+### Desplegado en Vercel
+El juego está configurado para desplegarse en Vercel. Una vez subido a GitHub, conecta el repositorio a Vercel para un despliegue automático.
 
 ## Requisitos
 
 - Python 3.x
-- Tkinter (incluido en la instalación estándar de Python en Windows)
+- Flask
 
-## Estructura del código
+## Estructura del proyecto
 
-- `PALABRAS`: Diccionario con listas de palabras por categoría.
-- `AHORCADO`: Lista de strings con el arte ASCII para cada etapa.
-- `HangmanGame`: Clase principal que maneja la interfaz y la lógica del juego.
+- `app.py`: Servidor Flask principal
+- `templates/index.html`: Plantilla HTML del juego
+- `static/css/style.css`: Estilos CSS
+- `static/js/game.js`: Lógica del juego en JavaScript
+- `requirements.txt`: Dependencias de Python
+- `vercel.json`: Configuración para despliegue en Vercel
+
+## Despliegue en Vercel
+
+1. Sube este código a un repositorio en GitHub.
+2. Ve a [Vercel](https://vercel.com) e importa el proyecto desde GitHub.
+3. Vercel detectará automáticamente la configuración y desplegará la aplicación.
+4. Obtén la URL del despliegue y comparte el juego.

@@ -1,183 +1,169 @@
-import random
 import tkinter as tk
-from tkinter import messagebox
+import random
 
-# Lista de palabras por categorías
-PALABRAS = {
-    "animales": ["gato", "perro", "elefante", "leon", "tigre", "oso", "conejo", "pajaro"],
-    "frutas": ["manzana", "banana", "naranja", "uva", "pera", "sandia", "melon", "fresa"],
-    "paises": ["espana", "francia", "italia", "alemania", "mexico", "argentina", "brasil", "colombia"],
-    "colores": ["rojo", "azul", "verde", "amarillo", "negro", "blanco", "morado", "rosa"]
-}
+# Palabras
+palabras = ["colombia", "mexico", "canada", "brasil", "argentina"]
 
-# Arte ASCII del ahorcado
-AHORCADO = [
-    """
-     +---+
-     |   |
-         |
-         |
-         |
-         |
-=========""",
-    """
-     +---+
-     |   |
-     O   |
-         |
-         |
-         |
-=========""",
-    """
-     +---+
-     |   |
-     O   |
-     |   |
-         |
-         |
-=========""",
-    """
-     +---+
-     |   |
-     O   |
-    /|   |
-         |
-         |
-=========""",
-    """
-     +---+
-     |   |
-     O   |
-    /|\\  |
-         |
-         |
-=========""",
-    """
-     +---+
-     |   |
-     O   |
-    /|\\  |
-    /    |
-         |
-=========""",
-    """
-     +---+
-     |   |
-     O   |
-    /|\\  |
-    / \\  |
-         |
-========="""
-]
+palabra = random.choice(palabras)
+letras_adivinadas = []
+intentos = 6
 
-def elegir_palabra():
-    categoria = random.choice(list(PALABRAS.keys()))
-    palabra = random.choice(PALABRAS[categoria])
-    return palabra, categoria
+# -------- FUNCIONES --------
 
-def mostrar_tablero(palabra, letras_adivinadas):
-    tablero = ""
+def actualizar_palabra():
+    texto = ""
+
     for letra in palabra:
         if letra in letras_adivinadas:
-            tablero += letra + " "
+            texto += letra + " "
         else:
-            tablero += "_ "
-    return tablero.strip()
+            texto += "_ "
 
-class HangmanGame(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Juego del Ahorcado")
-        self.geometry("400x600")
+    palabra_label.config(text=texto)
 
-        # Variables del juego
-        self.palabra, self.categoria = elegir_palabra()
-        self.letras_adivinadas = []
-        self.letras_usadas = []
-        self.intentos = 6
+    letras_usadas_label.config(
+        text="Letras usadas: " + ", ".join(letras_adivinadas)
+    )
 
-        # Widgets
-        self.art_label = tk.Label(self, text=AHORCADO[0], font=("Courier", 10), justify=tk.LEFT)
-        self.art_label.pack(pady=10)
+    if "_" not in texto:
+        resultado_label.config(text="🎉 ¡Ganaste!", fg="green")
 
-        self.category_label = tk.Label(self, text=f"Categoría: {self.categoria}", font=("Arial", 12))
-        self.category_label.pack()
 
-        self.word_label = tk.Label(self, text=mostrar_tablero(self.palabra, self.letras_adivinadas), font=("Arial", 24))
-        self.word_label.pack(pady=10)
+def adivinar():
+    global intentos
 
-        self.attempts_label = tk.Label(self, text=f"Intentos restantes: {self.intentos}", font=("Arial", 12))
-        self.attempts_label.pack()
+    letra = entrada.get().lower()
+    entrada.delete(0, tk.END)
 
-        self.used_label = tk.Label(self, text=f"Letras usadas: {', '.join(sorted(self.letras_usadas))}", font=("Arial", 12))
-        self.used_label.pack(pady=5)
+    if letra and letra not in letras_adivinadas:
 
-        self.entry = tk.Entry(self, font=("Arial", 14))
-        self.entry.pack(pady=5)
-        self.entry.focus()
+        letras_adivinadas.append(letra)
 
-        self.guess_button = tk.Button(self, text="Adivinar letra", command=self.guess, font=("Arial", 12))
-        self.guess_button.pack(pady=5)
+        if letra not in palabra:
+            intentos -= 1
 
-        self.new_game_button = tk.Button(self, text="Nuevo juego", command=self.new_game, font=("Arial", 12))
-        self.new_game_button.pack(pady=5)
+        intentos_label.config(text=f"Intentos restantes: {intentos}")
 
-        self.message_label = tk.Label(self, text="", font=("Arial", 12), fg="red")
-        self.message_label.pack(pady=10)
+        actualizar_palabra()
 
-        # Bind enter key
-        self.entry.bind("<Return>", lambda event: self.guess())
+        if intentos == 0:
+            resultado_label.config(
+                text=f"❌ Perdiste. La palabra era: {palabra}", fg="red"
+            )
 
-    def guess(self):
-        letra = self.entry.get().lower().strip()
-        self.entry.delete(0, tk.END)
 
-        if len(letra) != 1 or not letra.isalpha():
-            self.message_label.config(text="Ingresa una sola letra.", fg="red")
-            return
+def nuevo_juego():
+    global palabra, letras_adivinadas, intentos
 
-        if letra in self.letras_adivinadas or letra in self.letras_usadas:
-            self.message_label.config(text="Ya adivinaste esa letra.", fg="orange")
-            return
+    palabra = random.choice(palabras)
+    letras_adivinadas = []
+    intentos = 6
 
-        self.letras_usadas.append(letra)
+    intentos_label.config(text="Intentos restantes: 6")
+    resultado_label.config(text="")
 
-        if letra in self.palabra:
-            self.letras_adivinadas.append(letra)
-            self.message_label.config(text="¡Correcto!", fg="green")
-            if all(l in self.letras_adivinadas for l in self.palabra):
-                self.message_label.config(text="¡Felicidades! Ganaste.", fg="green")
-                self.guess_button.config(state=tk.DISABLED)
-                messagebox.showinfo("¡Ganaste!", f"Adivinaste la palabra: {self.palabra}")
-        else:
-            self.intentos -= 1
-            self.message_label.config(text="Incorrecto.", fg="red")
-            if self.intentos == 0:
-                self.message_label.config(text=f"¡Perdiste! La palabra era: {self.palabra}", fg="red")
-                self.guess_button.config(state=tk.DISABLED)
-                messagebox.showinfo("¡Perdiste!", f"La palabra era: {self.palabra}")
+    actualizar_palabra()
 
-        self.update_display()
 
-    def update_display(self):
-        self.art_label.config(text=AHORCADO[6 - self.intentos])
-        self.word_label.config(text=mostrar_tablero(self.palabra, self.letras_adivinadas))
-        self.attempts_label.config(text=f"Intentos restantes: {self.intentos}")
-        self.used_label.config(text=f"Letras usadas: {', '.join(sorted(self.letras_usadas))}")
+# -------- VENTANA --------
 
-    def new_game(self):
-        self.palabra, self.categoria = elegir_palabra()
-        self.letras_adivinadas = []
-        self.letras_usadas = []
-        self.intentos = 6
-        self.guess_button.config(state=tk.NORMAL)
-        self.message_label.config(text="", fg="red")
-        self.update_display()
-        self.category_label.config(text=f"Categoría: {self.categoria}")
+ventana = tk.Tk()
+ventana.title("Juego del Ahorcado")
+ventana.geometry("500x500")
+ventana.configure(bg="#1e1e2f")
 
-def main():
-    app = HangmanGame()
-    app.mainloop()
+titulo = tk.Label(
+    ventana,
+    text="🎮 JUEGO DEL AHORCADO",
+    font=("Arial", 22, "bold"),
+    bg="#1e1e2f",
+    fg="white"
+)
 
-if __name__ == "__main__":
-    main()
+titulo.pack(pady=20)
+
+categoria = tk.Label(
+    ventana,
+    text="Categoría: Países",
+    font=("Arial", 14),
+    bg="#1e1e2f",
+    fg="white"
+)
+
+categoria.pack()
+
+palabra_label = tk.Label(
+    ventana,
+    text="",
+    font=("Arial", 28, "bold"),
+    bg="#1e1e2f",
+    fg="#00e5ff"
+)
+
+palabra_label.pack(pady=20)
+
+intentos_label = tk.Label(
+    ventana,
+    text="Intentos restantes: 6",
+    font=("Arial", 14),
+    bg="#1e1e2f",
+    fg="white"
+)
+
+intentos_label.pack()
+
+letras_usadas_label = tk.Label(
+    ventana,
+    text="Letras usadas:",
+    font=("Arial", 12),
+    bg="#1e1e2f",
+    fg="white"
+)
+
+letras_usadas_label.pack(pady=10)
+
+entrada = tk.Entry(
+    ventana,
+    font=("Arial", 14),
+    justify="center"
+)
+
+entrada.pack(pady=10)
+
+boton_adivinar = tk.Button(
+    ventana,
+    text="Adivinar letra",
+    font=("Arial", 12, "bold"),
+    bg="#00b894",
+    fg="white",
+    width=15,
+    command=adivinar
+)
+
+boton_adivinar.pack(pady=5)
+
+boton_nuevo = tk.Button(
+    ventana,
+    text="Nuevo juego",
+    font=("Arial", 12, "bold"),
+    bg="#0984e3",
+    fg="white",
+    width=15,
+    command=nuevo_juego
+)
+
+boton_nuevo.pack(pady=5)
+
+resultado_label = tk.Label(
+    ventana,
+    text="",
+    font=("Arial", 16, "bold"),
+    bg="#1e1e2f",
+    fg="white"
+)
+
+resultado_label.pack(pady=20)
+
+actualizar_palabra()
+
+ventana.mainloop()

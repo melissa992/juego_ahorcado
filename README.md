@@ -11,19 +11,33 @@ Un juego del ahorcado interactivo implementado en Python con interfaz web usando
 - **Nuevo juego**: Botón para iniciar una nueva partida.
 - **Responsive**: Diseño adaptable a diferentes tamaños de pantalla.
 
-## Cómo jugar
+## Instalación y Ejecución
 
-### Localmente
-Ejecuta el script `app.py` con Python:
-
+### Clonar el repositorio
+```bash
+git clone https://github.com/melissa992/juego_ahorcado.git
+cd juego_ahorcado
 ```
+
+### Instalar dependencias
+```bash
+pip install -r requirements.txt
+```
+
+### Ejecutar localmente
+```bash
 python app.py
 ```
 
 Abre tu navegador en `http://127.0.0.1:5000/`
 
-### Desplegado en Vercel
-El juego está configurado para desplegarse en Vercel. Una vez subido a GitHub, conecta el repositorio a Vercel para un despliegue automático.
+## Cómo jugar
+
+- Se mostrará una categoría y la palabra oculta con guiones bajos.
+- Ingresa letras en el campo de texto y presiona "Adivinar" o Enter.
+- Tienes 6 intentos para adivinar la palabra completa.
+- El ahorcado se dibuja progresivamente con cada error.
+- Gana adivinando todas las letras antes de agotar los intentos.
 
 ## Requisitos
 

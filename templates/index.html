@@ -8,10 +8,14 @@
 </head>
 <body>
     <div class="container">
-        <h1>Juego del Ahorcado</h1>
+        <header>
+            <h1>🎯 Juego del Ahorcado</h1>
+        </header>
         
-        <div id="hangman-art" class="hangman-art">
-            <pre>
+        <main class="game-main">
+            <section class="hangman-section">
+                <div id="hangman-art" class="hangman-art">
+                    <pre>
      +---+
      |   |
          |
@@ -19,24 +23,30 @@
          |
          |
 =========
-            </pre>
-        </div>
-        
-        <div class="game-info">
-            <p id="category">Categoría: Cargando...</p>
-            <p id="word-display">_ _ _ _ _</p>
-            <p id="attempts">Intentos restantes: 6</p>
-            <p id="used-letters">Letras usadas: </p>
-        </div>
-        
-        <div class="input-section">
-            <input type="text" id="letter-input" maxlength="1" placeholder="Ingresa una letra">
-            <button id="guess-btn">Adivinar</button>
-        </div>
-        
-        <button id="new-game-btn">Nuevo Juego</button>
-        
-        <div id="message" class="message"></div>
+                    </pre>
+                </div>
+            </section>
+            
+            <section class="game-info">
+                <p id="category">Categoría: Cargando...</p>
+                <p id="word-display">_ _ _ _ _</p>
+                <p id="attempts">Intentos restantes: 6</p>
+                <p id="used-letters">Letras usadas: </p>
+            </section>
+            
+            <section class="controls">
+                <div class="input-section">
+                    <input type="text" id="letter-input" maxlength="1" placeholder="Letra" aria-label="Ingresa una letra">
+                    <button id="guess-btn" aria-label="Adivinar letra">Adivinar</button>
+                </div>
+                
+                <button id="new-game-btn" aria-label="Iniciar nuevo juego">Nuevo Juego</button>
+            </section>
+            
+            <section class="messages">
+                <div id="message" class="message" aria-live="polite"></div>
+            </section>
+        </main>
     </div>
 
     <script src="{{ url_for('static', filename='js/game.js') }}"></script>
